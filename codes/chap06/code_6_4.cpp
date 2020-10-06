@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm> // sort() や lower_bound() に必要です
 using namespace std;
-const int INF = 20000000;   // 十分大きな値に
+const int INF = 20000000; // 十分大きな値に
 
 int main() {
     // 入力を受け取る
@@ -17,6 +17,10 @@ int main() {
 
     // b をソート
     sort(b.begin(), b.end());
+
+    // b に無限大を表す値 (INF) を追加しておく
+    // これを行うことで、iter = b.end() となる可能性を除外する
+    b.push_back(INF);
 
     // a を固定して解く
     for (int i = 0; i < N; ++i) {
