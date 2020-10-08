@@ -29,7 +29,7 @@ int main() {
     cin >> N >> v;
     vector<int> a(N);
     for (int i = 0; i < N; ++i) cin >> a[i];
-    
+
     // 線形探索
     int counter = 0;
     for (int i = 0; i < N; ++i) {
@@ -37,7 +37,7 @@ int main() {
             ++counter;  // カウントを増やす
         }
     }
-    
+
     // 結果出力
     cout << counter << endl;
 }
@@ -51,8 +51,8 @@ int main() {
 
 次の 2 つの変数を用意します。
 
-- 最大値を表す変数 best_value
-- 2 番目に大きな値を表す変数 second_value
+- 最小値を表す変数 worst_value
+- 2 番目に小さな値を表す変数 second_value
 
 これらを用いて、次のように実装できます。計算量は O(N) です。
 
@@ -70,15 +70,18 @@ int main() {
     cin >> N;
     vector<int> a(N);
     for (int i = 0; i < N; ++i) cin >> a[i];
-    
+
     // 線形探索
-    int best_value = -INF;
-    int second_value = -INF;
+    int worst_value = INF;
+    int second_value = INF;
     for (int i = 0; i < N; ++i) {
-        if (a[i] > best_value) best_value = a[i];
-        else if (a[i] > second_value) second_value = a[i];
+        if (a[i] < worst_value) {
+            second_value = worst_value;
+            worst_value = a[i];
+        }
+        else if (a[i] < second_value) second_value = a[i];
     }
-    
+
     // 結果出力
     cout << second_value << endl;
 }
@@ -106,7 +109,7 @@ int main() {
     cin >> N;
     vector<int> a(N);
     for (int i = 0; i < N; ++i) cin >> a[i];
-    
+
     // 線形探索
     int max_value = -INF;
     int min_value = INF;
@@ -114,7 +117,7 @@ int main() {
         if (a[i] < min_value) min_value = a[i];
         if (a[i] > max_value) max_value = a[i];
     }
-    
+
     // 結果出力
     cout << max_value - min_value << endl;
 }
@@ -160,7 +163,7 @@ const int INF = 1234567890;
 int main() {
     int N;
     cin >> N;
-    vector<int> A(N); 
+    vector<int> A(N);
     for (int i = 0; i < N; ++i) cin >> A[i];
 
     // 2 で何回割れるかの最小値を求める
@@ -214,7 +217,7 @@ Z = N - X - Y
 using namespace std;
 
 int main() {
-    int K, N; 
+    int K, N;
     cin >> K >> N;
 
     int count = 0;
