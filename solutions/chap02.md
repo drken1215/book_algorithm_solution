@@ -2,9 +2,9 @@
 
 次のように表せます。
 
+<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-1.png height=200mm>
 
 
-<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-1.png height=300mm>
 
 　
 
@@ -12,11 +12,7 @@
 
 0 <= i < j < k < N を満たす (i, j, k) の組の個数を数え上げればよいでしょう。これは、N 個のものから 3 個を選ぶ場合の数に等しいので、
 
-
-
-<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-2.png height=80mm>
-
-
+<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-2.png height=70mm>
 
 となります。よって、計算量は O(N^3) と評価できます。
 
@@ -59,13 +55,9 @@ A さんの年齢の選択肢は、1 回の質問によって半減させるこ�
 
 一般の整数 N に対しては、次のように考えます。まず、
 
+<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-5-1.png height=60mm>
 
-
-<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-5-1.png height=80mm>
-
-
-
-を満たすような整数 k が定まることに注意します。たとえば N = 100 のとき、k = 7 となります (2^6 = 64、2^7 = 128 です)。このとき、k < log N + 1 となりますので、k = O(log N) であることに注意します。一方、N <= 2^k より、k 回の質問によって当てることができます。以上より、O(log N) 回の質問によって、A さんの年齢を当てられることがわかりました。
+を満たすような整数 k が定まることに注意します。たとえば N = 100 のとき、k = 7 となります (2^6 = 64、2^7 = 128 です)。このとき、k < log N + 1 ですので、k = O(log N) です。一方、N <= 2^k より、k 回の質問によって当てることができます。以上より、O(log N) 回の質問によって、A さんの年齢を当てられることがわかりました。
 
 
 
@@ -75,11 +67,7 @@ A さんの年齢の選択肢は、1 回の質問によって半減させるこ�
 
 下のグラフより、次の式が成り立ちます。
 
-
-
-<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-6-2.png height=80mm>
-
-
+<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-6-2.png height=65mm>
 
 これは、1 + 1/2 + … + 1/N = O(log N) であることを示しています。
 
