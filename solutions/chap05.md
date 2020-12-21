@@ -1,0 +1,230 @@
+# 5.1 (EDPC C - Vacation)
+
+次のように配列 dp を定義します。
+
+-----
+
+`dp[i][j]` ← 最初の i 日間の分の行動について考えます。i 日間の行動のうち、最後の日の活動が、j = 0 のときは「海での泳ぎ」、j = 1 のときは「虫捕り」、j = 2 のときは「宿題」であるとします。そのときの幸福度の最大値
+
+-----
+
+そして、dp[ i ] から dp[ i + 1 ] への遷移については、次の 6 通りのパターンを考えます。
+
+- dp[ i ] [ 0 ] から dp[ i + 1 ] [ 1 ] への遷移
+- dp[ i ] [ 0 ] から dp[ i + 1 ] [ 2 ] への遷移
+- dp[ i ] [ 1 ] から dp[ i + 1 ] [ 0 ] への遷移
+- dp[ i ] [ 1 ] から dp[ i + 1 ] [ 2 ] への遷移
+- dp[ i ] [ 2 ] から dp[ i + 1 ] [ 0 ] への遷移
+- dp[ i ] [ 2 ] から dp[ i + 1 ] [ 1 ] への遷移
+
+具体的には次のコードのように実装できます。詳細については以下の記事の「C 問題 - Vacation」の章を読んでみてください。
+
+　
+
+[動的計画法超入門！ Educational DP Contest の A ～ E 問題の解説と類題集](https://qiita.com/drken/items/dc53c683d6de8aeacf5a)
+
+　　
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
+template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
+
+int main() {
+    // 入力
+    int N; 
+    cin >> N;
+    vector<vector<long long>> a(N, vector<long long>(3));
+    for (int i = 0; i < N; ++i) 
+        for (int j = 0; j < 3; ++j) 
+            cin >> a[i][j];
+
+    // DP
+    vector<vector<long long>> dp(N+1, vector<long long>(3, 0));
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                if (j == k) continue;
+                chmax(dp[i + 1][k], dp[i][j] + a[i][k]);
+            }
+        }
+    }
+
+    // 答え
+    long long res = 0;
+    for (int j = 0; j < 3; ++j) chmax(res, dp[N][j]);
+    cout << res << endl;
+}
+```
+
+　
+
+# 5.2 (部分和問題)
+
+5.4 節で解説した「ナップサック問題」とほとんど同様に解くことができます。部分問題を次のように定義します。
+
+-----
+
+`dp[i][j]` ← 最初の i 個の整数の中からいくつか選んだ総和が j にできるかどうかを表すブール値
+
+-----
+
+ナップサック問題とほとんど同様に、次のようなコードで解決できます。詳細については以下の記事の「問題 3: 部分和問題」の節を読んでみてください。
+
+　
+
+[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+
+　
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    // 入力
+    int N, W;
+    cin >> N >> W;
+    vector<int> a(N);
+    for (int i = 0; i < N; ++i) cin >> a[i];
+
+    // DP
+    vector<vector<bool>> dp(N+1, vector<bool>(W+1, false));
+    dp[0][0] = true;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j <= W; ++j) {
+            if (!dp[i][j]) continue;
+            dp[i+1][j] = true;
+            if (j+a[i] <= W) dp[i+1][j+a[i]] = true;
+        }
+    }
+
+    // 答え
+    if (dp[N][W]) cout << "Yes" << endl;
+    else cout << "No" << endl;
+}
+```
+
+　
+
+# 5.3 (TDPC A - コンテスト)
+
+ここでは詳細を省略しますが、部分和問題で求めた配列 dp を活用することで解けます。次の記事で解説しています。
+
+　
+
+[AtCoder TDPC A - コンテスト](https://drken1215.hatenablog.com/entry/2020/12/21/153600)
+
+　
+
+# 5.4 (k 個以内で W を作る)
+
+次の配列 dp を求めることで解決できます。
+
+-----
+
+`dp[i][j]` ← 最初の i 個の整数の中からいくつか選んだ総和が j にする方法のうち、選ぶ整数の個数の最小値
+
+------
+
+詳細については以下の記事の「問題 6: K個以内部分和問題」の節を読んでみてください。
+
+　
+
+[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+
+　
+
+# 5.5 (個数制限なし部分和問題)
+
+これまでの問題よりも難易度が大きく上がります。次のように配列 dp を定義します。
+
+-----
+
+`dp[i][j]` ← 最初の i 個の整数のみを用いて、重複ありを許して総和をとった値を j にすることが可能かどうか
+
+-----
+
+通常の部分和問題では次のように遷移します。
+
+　
+
+```cpp
+dp[i+1][j] |= dp[i][j];
+dp[i+1][j+a[i]] |= dp[i][j];
+```
+
+　
+
+しかし今回は、同じ整数 `a[i]` を何度でも活用することができます。上の遷移式では、`a[i]` を一度しか使えない状態になっています。そこで遷移を次のように変更しましょう。
+
+　
+
+```cpp
+dp[i+1][j] |= dp[i][j];
+dp[i+1][j+a[i]] |= dp[i+1][j];
+```
+
+　
+
+このように変更することで、`a[i]` を何度でも活用できる状態になります。計算量は変わらず O(NW) となります。
+
+　
+
+### コード　
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    // 入力
+    int N, W;
+    cin >> N >> W;
+    vector<int> a(N);
+    for (int i = 0; i < N; ++i) cin >> a[i];
+
+    // DP
+    vector<vector<bool>> dp(N+1, vector<bool>(W+1, false));
+    dp[0][0] = true;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j <= W; ++j) {
+            if (dp[i][j]) dp[i+1][j] = true;
+            if (dp[i+1][j] && j+a[i] <= W) dp[i+1][j+a[i]] = true;
+        }
+    }
+
+    // 答え
+    if (dp[N][W]) cout << "Yes" << endl;
+    else cout << "No" << endl;
+}
+```
+
+　
+
+# 5.6 (個数制限付き部分和問題)
+
+5.5 (個数制限なし部分和問題) よりも難易度が大きく上がります。5.5 では各整数を無制限に用いることができましたが、今回はそれぞれの整数 `a[i]` を活用できる回数の上限 `m[i]` が定められています。そこで、配列 dp の定義を次のように変更します。
+
+------
+
+`dp[i][j]` ← 最初の i 個の整数のみを用いて、整数 j を作る方法のうち、最後の整数を用いる回数の最小値
+
+------
+
+　
+
+
+
+
+
+
+
+```cpp
+
+```
+
