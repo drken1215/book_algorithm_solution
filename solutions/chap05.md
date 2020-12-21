@@ -19,9 +19,7 @@
 
 具体的には次のコードのように実装できます。詳細については以下の記事の「C 問題 - Vacation」の章を読んでみてください。
 
-　
-
-[動的計画法超入門！ Educational DP Contest の A ～ E 問題の解説と類題集](https://qiita.com/drken/items/dc53c683d6de8aeacf5a)
+- [動的計画法超入門！ Educational DP Contest の A ～ E 問題の解説と類題集](https://qiita.com/drken/items/dc53c683d6de8aeacf5a)
 
 　　
 
@@ -73,9 +71,7 @@ int main() {
 
 ナップサック問題とほとんど同様に、次のようなコードで解決できます。詳細については以下の記事の「問題 3: 部分和問題」の節を読んでみてください。
 
-　
-
-[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+- [典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
 
 　
 
@@ -114,9 +110,7 @@ int main() {
 
 ここでは詳細を省略しますが、部分和問題で求めた配列 dp を活用することで解けます。次の記事で解説しています。
 
-　
-
-[AtCoder TDPC A - コンテスト](https://drken1215.hatenablog.com/entry/2020/12/21/153600)
+- [AtCoder TDPC A - コンテスト](https://drken1215.hatenablog.com/entry/2020/12/21/153600)
 
 　
 
@@ -132,9 +126,7 @@ int main() {
 
 詳細については以下の記事の「問題 6: K個以内部分和問題」の節を読んでみてください。
 
-　
-
-[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+- [典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
 
 　
 
@@ -174,8 +166,6 @@ dp[i+1][j+a[i]] |= dp[i+1][j];
 
 　
 
-### コード　
-
 ```cpp
 #include <iostream>
 #include <vector>
@@ -212,19 +202,84 @@ int main() {
 
 ------
 
-`dp[i][j]` ← 最初の i 個の整数のみを用いて、整数 j を作る方法のうち、最後の整数を用いる回数の最小値
+`dp[i][j]` ← 最初の i 個の整数のみを用いて、整数 j を作る方法のうち、最後の整数を用いる回数の**最小値**
 
 ------
 
+このとき、`dp[i]` から `dp[i+1]` への遷移を次のように詰めることができます。なお、j を作ることができない場合は `dp[i][j] = INF` (`INF` を無限大を表す値とする) であるものとします。
+
+
+
+- `a[i]` を用いない場合
+
+`dp[i][j] < INF` ならば、`a[i]` を用いずに `j` を作ることができるので、 
+
+`chmin(dp[i+1][j], 0)`
+
+
+
+- `dp[i+1][j] < m[i]`  である場合
+
+さらに追加で `a[i]` を用いることができるので、
+
+`chmin(dp[i+1][j+a[i]], dp[i+1][j] + 1)`
+
+
+
+以上の処理を実装すると次のコードになります。計算量は O(NW) です。
+
 　
 
-
-
-
-
-
-
 ```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
+template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
 
+const int INF = 1<<29;
+int main() {
+    // 入力
+    int N, W;
+    cin >> N >> W;
+    vector<int> a(N), m(N);
+    for (int i = 0; i < N; ++i) cin >> a[i] >> m[i];
+
+    // DP
+    vector<vector<int>> dp(N+1, vector<int>(W+1, INF));
+    dp[0][0] = 0;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j <= W; ++j) {
+            if (dp[i][j] < INF) chmin(dp[i+1][j], 0);
+            if (j+a[i] <= W && dp[i+1][j] < m[i]) {
+                chmin(dp[i+1][j+a[i]], dp[i+1][j]+1);
+            }
+        }
+    }
+
+    // 答え
+    if (dp[N][W] < INF) cout << "Yes" << endl;
+    else cout << "No" << endl;
+}
 ```
+
+　
+
+# 5.7 (最長共通部分列問題)
+
+本問題は、5.5 節で解説した「編集距離を求める問題」の類題です。詳細については、以下の記事の「問題 8: 最長共通部分列 (LCS) 問題」の節に詳しく書きました。
+
+- [典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+
+　　
+
+# 5.8 (RUPC 2018 day1-D 水槽)
+
+本問題は、5.6 節で解説した「区間分割を最適化する問題」の類題です。詳細については、以下の記事で詳しく解説しています。
+
+- [AOJ 2877 水槽 (RUPC 2018 day1-D)](https://drken1215.hatenablog.com/entry/2020/12/21/202300)
+
+　
+
+# 5.9 (最適二分探索木問題)
 
