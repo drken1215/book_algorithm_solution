@@ -11,9 +11,9 @@ vector<int> BFS(const Graph &G, int s) {
     vector<int> dist(N, -1); // 全頂点を「未訪問」に初期化
     queue<int> que;
 
-    // 初期条件 (頂点 0 を初期頂点とする)
-    dist[0] = 0;
-    que.push(0); // 0 を橙色頂点にする
+    // 初期条件 (頂点 s を初期頂点とする)
+    dist[s] = 0;
+    que.push(s); // s を橙色頂点にする
 
     // BFS 開始 (キューが空になるまで探索を行う)
     while (!que.empty()) {
