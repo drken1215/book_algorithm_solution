@@ -19,6 +19,7 @@ void BucketSort(vector<int> &a) {
     // sum[v]: v 以下の値の個数
     // 値 a[i] が全体の中で何番目に小さいかを求める
     vector<int> sum(MAX, 0);
+    sum[0] = num[0];
     for (int v = 1; v < MAX; ++v) {
         sum[v] = sum[v - 1] + num[v];
     }
