@@ -24,7 +24,7 @@ void BucketSort(vector<int> &a) {
         sum[v] = sum[v - 1] + num[v];
     }
 
-    // sum を元にソート処理
+    // sum をもとにソート処理
     // a2: a をソートしたもの
     vector<int> a2(N);
     for (int i = N - 1; i >= 0; --i) {
