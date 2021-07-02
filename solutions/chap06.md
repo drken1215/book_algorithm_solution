@@ -52,7 +52,7 @@ int main() {
 
 配列 `a`, `b`, `c`  をそれぞれソートしてから、lower_bound() などを駆使して解くことができます。解法の詳細については、次の記事に記しました。参考にしていただければと思います。
 
-- [AtCoder ABC 077 C - Snuke Festival](https://drken1215.hatenablog.com/entry/2021/02/25/223800)
+[AtCoder ABC 077 C - Snuke Festival](https://drken1215.hatenablog.com/entry/2021/02/25/223800)
 
 　
 
@@ -60,7 +60,7 @@ int main() {
 
 とても難易度の高い問題ですが、「半分全列挙」と「二分探索」の考え方によって解くことができます。解法の詳細については、次の記事に記しました。参考にしていただければと思います。
 
-- [JOI 本選 2018 C - ダーツ](https://drken1215.hatenablog.com/entry/2020/12/04/035454)
+[JOI 本選 2018 C - ダーツ](https://drken1215.hatenablog.com/entry/2020/12/04/035454)
 
 　
 
@@ -131,5 +131,11 @@ int main() {
 }
 ```
 
+　
 
+# 6.5 (ARC 037 C - 億マス計算)
+
+「K 番目に小さな値を求めよ」「メディアンを求めよ」という設定の問題では、しばしば二分探索法が有効となります。解法の詳細については、次の記事に記しました。参考にしていただければと思います。
+
+[AtCoder ARC 037 C - 億マス計算 (青色)](https://drken1215.hatenablog.com/entry/2021/07/03/041500)
 
