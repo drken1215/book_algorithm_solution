@@ -188,7 +188,7 @@ int func(int i, int w, const vector<int> &a) {
     // a[i - 1] を選ばない場合
     if (func(i - 1, w, a)) return memo[i][w] = 1;
 
-    // a[i - 1] をぶ場合
+    // a[i - 1] を選ぶ場合
     if (func(i - 1, w - a[i - 1], a)) return memo[i][w] = 1;
 
     // どちらも false の場合は false
