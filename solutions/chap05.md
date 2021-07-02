@@ -19,7 +19,7 @@
 
 具体的には次のコードのように実装できます。詳細については以下の記事の「C 問題 - Vacation」の章を読んでみてください。
 
-- [動的計画法超入門！ Educational DP Contest の A ～ E 問題の解説と類題集](https://qiita.com/drken/items/dc53c683d6de8aeacf5a)
+[動的計画法超入門！ Educational DP Contest の A ～ E 問題の解説と類題集](https://qiita.com/drken/items/dc53c683d6de8aeacf5a)
 
 　　
 
@@ -71,7 +71,7 @@ int main() {
 
 ナップサック問題とほとんど同様に、次のようなコードで解決できます。詳細については以下の記事の「問題 3: 部分和問題」の節を読んでみてください。
 
-- [典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
 
 　
 
@@ -110,7 +110,7 @@ int main() {
 
 ここでは詳細を省略しますが、部分和問題で求めた配列 dp を活用することで解けます。次の記事で解説しています。
 
-- [AtCoder TDPC A - コンテスト](https://drken1215.hatenablog.com/entry/2020/12/21/153600)
+[AtCoder TDPC A - コンテスト](https://drken1215.hatenablog.com/entry/2020/12/21/153600)
 
 　
 
@@ -126,7 +126,7 @@ int main() {
 
 詳細については以下の記事の「問題 6: K個以内部分和問題」の節を読んでみてください。
 
-- [典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
 
 　
 
@@ -269,7 +269,7 @@ int main() {
 
 本問題は、5.5 節で解説した「編集距離を求める問題」の類題です。詳細については、以下の記事の「問題 8: 最長共通部分列 (LCS) 問題」の節に詳しく書きました。
 
-- [典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
 
 　　
 
@@ -277,7 +277,7 @@ int main() {
 
 本問題は、5.6 節で解説した「区間分割を最適化する問題」の類題です。詳細については、以下の記事で詳しく解説しています。
 
-- [AOJ 2877 水槽 (RUPC 2018 day1-D)](https://drken1215.hatenablog.com/entry/2020/12/21/202300)
+[AOJ 2877 水槽 (RUPC 2018 day1-D)](https://drken1215.hatenablog.com/entry/2020/12/21/202300)
 
 　
 
@@ -309,7 +309,7 @@ for (int k = i+1; k < j; ++k) {
 
 以上を踏まえて、次のコードのように実装できます。計算量は O(N^3) となります。なお、配列 `a` の累積和を `S` としています。これは上述の遷移式中の `s[i:j]` の計算をするのに用いています。具体的には `s[i:j] = S[j] - S[i]` と計算できます。累積和について詳しく知りたい方は、次の記事を参照してください。
 
-- [累積和を何も考えずに書けるようにする！](https://qiita.com/drken/items/56a6b68edef8fc605821)
+[累積和を何も考えずに書けるようにする！](https://qiita.com/drken/items/56a6b68edef8fc605821)
 
 　
 
