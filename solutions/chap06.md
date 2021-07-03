@@ -147,5 +147,11 @@ int main() {
 
 [AtCoder ABC 026 D - 高橋君ボール1号](https://drken1215.hatenablog.com/entry/2021/07/03/173400)
 
+　
 
+# 6.7 (ARC 101 D - edian of Medians)
+
+「K 番目に小さな値を求めよ」「メディアンを求めよ」という設定の問題では、しばしば二分探索法が有効となります。大変難しい問題です。解法の詳細については、次の記事に記しました。参考にしていただければと思います。
+
+[AtCoder ABC 107 D - Median of Medians](https://drken1215.hatenablog.com/entry/2018/09/08/011500?_ga=2.135966193.1107495987.1625194483-791597362.1625194483)
 
