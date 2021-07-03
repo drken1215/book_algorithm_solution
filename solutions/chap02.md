@@ -12,7 +12,7 @@
 
 0 <= i < j < k < N を満たす (i, j, k) の組の個数を数え上げればよいでしょう。これは、N 個のものから 3 個を選ぶ場合の数に等しいので、
 
-<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-2.png height=85mm>
+<img src=https://github.com/drken1215/book_algorithm_solution/blob/master/fig/sol2-2.png height=60mm>
 
 となります。よって、計算量は O(N^3) と評価できます。
 

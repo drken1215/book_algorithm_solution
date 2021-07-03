@@ -1,6 +1,8 @@
 # 5.1 (EDPC C - Vacation)
 
-次のように配列 dp を定義します。
+もし「2 日連続で同一種類の選択をできない」という制約がなければ、単純に各日程ごとに max(a[i], b[i], c[i]) を合計するだけですね。実際は制約があるのでそれに応じた解法を考える必要があります。
+
+次のように配列 dp を定義しましょう。
 
 -----
 
@@ -17,18 +19,26 @@
 - `dp[i][2]` から `dp[i+1][0]`への遷移
 - `dp[i][2]` から `dp[i+1][1]`への遷移
 
-具体的には次のコードのように実装できます。詳細については以下の記事の「C 問題 - Vacation」の章を読んでみてください。
+次のようにすればよいでしょう。6 本の式を並べて書くのは大変ですので、添字 j, k を用いて for 文ループを回すようにします。
 
-[動的計画法超入門！ Educational DP Contest の A ～ E 問題の解説と類題集](https://qiita.com/drken/items/dc53c683d6de8aeacf5a)
+-----
 
-　　
+各 (j, k) (j, k = 0, 1, 2, j != k) に対して
+
+`chmax(dp[i+1][k], dp[i][j] + a[i][k]);`
+
+-----
+
+以上をまとめて、次のように実装できます。計算量は O(N) となります。
+
+　
 
 ```cpp
 #include <iostream>
 #include <vector>
 using namespace std;
-template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
-template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
+template<class T> void chmax(T& a, T b) { if (a < b) a = b; }
+template<class T> void chmin(T& a, T b) { if (a > b) a = b; }
 
 int main() {
     // 入力
@@ -39,9 +49,12 @@ int main() {
         for (int j = 0; j < 3; ++j) 
             cin >> a[i][j];
 
-    // DP
+    // DP テーブル
     vector<vector<long long>> dp(N+1, vector<long long>(3, 0));
+
+    // i 日目から i+1 日目へ
     for (int i = 0; i < N; ++i) {
+        // i 日目の状態は j、i+1 日目の状態は k
         for (int j = 0; j < 3; ++j) {
             for (int k = 0; k < 3; ++k) {
                 if (j == k) continue;
@@ -65,15 +78,27 @@ int main() {
 
 -----
 
-`dp[i][j]` ← 最初の i 個の整数の中からいくつか選んだ総和が j にできるかどうかを表すブール値
+`dp[i][j]` ← 最初の i 個の整数の中からいくつか選んだ総和が j にできるかどうかを表すブール値 (true / false)
 
 -----
 
-ナップサック問題とほとんど同様に、次のようなコードで解決できます。詳細については以下の記事の「問題 3: 部分和問題」の節を読んでみてください。
-
-[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+ナップサック問題とほとんど同様に、解くことができます。ナップサック問題では、`dp[i][0]`, `dp[i][1]`, ... の値が分かっていることを前提に `dp[i+1][0]`, `dp[i+1][1]`, ... の値を求める遷移式を考えました。部分和問題でも同様です。`dp[i+1][j]` の値を考えるときに、`a[i]` を選ぶ場合と選ばない場合とで場合分けして考えます。次のように考えられます。
 
 　
+
+```cpp
+// a[i] を選ばない場合
+if (dp[i][j]) dp[i+1][j] = true;
+
+// a[i] を選ぶ場合
+if (j >= a[i] && dp[i][j-a[i]]) dp[i+1][j] = true;
+```
+
+　
+
+これらをまとめると、次のように実装できます。計算量は O(NW) となります。
+
+
 
 ```cpp
 #include <iostream>
@@ -92,9 +117,11 @@ int main() {
     dp[0][0] = true;
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j <= W; ++j) {
-            if (!dp[i][j]) continue;
-            dp[i+1][j] = true;
-            if (j+a[i] <= W) dp[i+1][j+a[i]] = true;
+            // a[i] を選ばない場合
+            if (dp[i][j]) dp[i+1][j] = true;
+
+            // a[i] を選ぶ場合
+            if (j >= a[i] && dp[i][j-a[i]]) dp[i+1][j] = true;
         }
     }
 
@@ -114,9 +141,39 @@ int main() {
 
 　
 
-# 5.4 (k 個以内で W を作る)
+# 5.4 (K 個以内で W を作る)
 
-次の配列 dp を求めることで解決できます。
+N 個の整数 `a[0]`, `a[1]`, ..., `a[N-1]` から K 個以内の整数を選んで、総和が W となるようにできるかどうかを判定する問題を考えます。一見すると、O(NKW) の計算量を必要とするように思えるかもしれません。つまり、次のような配列 `dp` を定義することが考えられます。
+
+-----
+
+`dp[i][j][k]` ← 最初の i 個の整数の中から、総和が j がなるように選ぶことができるかどうかを表すブール値 (true / false)。ただし選ぶ個数が k 個以内となるようにする
+
+-----
+
+このような配列の遷移を考えることで、確かにこの問題を解くことができます。たとえば次のコードのようなループを組めばよいでしょう。しかしこのままでは O(NKW) の計算量となってしまいます。
+
+　
+
+```cpp
+for (int i = 0; i < N; ++i) {
+    for (int j = 0; j <= W; ++j) {
+        for (int k = 0; k <= K; ++k) {
+            // a[i] を選ばない場合
+            if (dp[i][j][k])
+                dp[i+1][j][k] = true;
+                
+            // a[i] を選ぶ場合
+            if (j >= a[i] && k >= 1 && dp[i][j-a[i]][k-1])
+                dp[i+1][j][k] = true;
+        }
+    }
+}
+```
+
+　
+
+しかし実は、次のように配列 `dp` を定義することで解決できます。先ほどの配列 `dp` はブール値であったのに対し、今回の `dp` はより豊かな情報を持たせています。
 
 -----
 
@@ -124,15 +181,69 @@ int main() {
 
 ------
 
-詳細については以下の記事の「問題 6: K個以内部分和問題」の節を読んでみてください。
+遷移自体は今までのナップサック問題や、部分和問題とほとんど同様に考えることができます。
 
-[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+　
+
+```cpp
+// a[i] を選ばない場合
+chmin(dp[i+1][j], dp[i][j]);
+
+// a[i] を選ぶ場合 (+1 は 1 個増やすことを意味する)
+if (j >= a[i]) chmin(dp[i+1][j], dp[i][j-a[i]] + 1);
+```
+
+　
+
+そして最後に、`dp[N][W]` が K 以下かどうかによって、目的を果たせるかどうかを判定できます。
+
+　
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+template<class T> void chmax(T& a, T b) { if (a < b) a = b; }
+template<class T> void chmin(T& a, T b) { if (a > b) a = b; }
+
+// 無限大を表す値
+const int INF = 1<<29;
+
+int main() {
+    // 入力
+    int N, K, W;
+    cin >> N >> K >> W;
+    vector<int> a(N);
+    for (int i = 0; i < N; ++i) cin >> a[i];
+
+    // 配列 dp
+    vector<vector<int>> dp(N+1, vector<int>(W+1, INF));
+
+    // 初期条件
+    dp[0][0] = 0;
+
+    // ループ
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j <= W; ++j) {
+            // a[i] を選ばない場合
+            chmin(dp[i+1][j], dp[i][j]);
+
+            // a[i] を選ぶ場合
+            if (j >= a[i]) chmin(dp[i+1][j], dp[i][j-a[i]] + 1);
+        }
+    }
+
+    // 最小値が K 以下ならば、Yes
+    if (dp[N][W] <= K) cout << "Yes" << endl;
+    else cout << "No" << endl;
+}
+```
 
 　
 
 # 5.5 (個数制限なし部分和問題)
 
-これまでの問題よりも難易度が大きく上がります。次のように配列 dp を定義します。
+これまでの問題よりも難易度が大きく上がります。次のように配列 dp を定義しましょう。
 
 -----
 
