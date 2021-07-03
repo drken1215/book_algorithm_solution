@@ -253,25 +253,17 @@ int main() {
 
 通常の部分和問題では次のように遷移します。
 
-　
-
 ```cpp
 dp[i+1][j] |= dp[i][j];
-dp[i+1][j+a[i]] |= dp[i][j];
+dp[i+1][j] |= dp[i][j-a[i]];
 ```
-
-　
 
 しかし今回は、同じ整数 `a[i]` を何度でも活用することができます。上の遷移式では、`a[i]` を一度しか使えない状態になっています。そこで遷移を次のように変更しましょう。
 
-　
-
 ```cpp
 dp[i+1][j] |= dp[i][j];
-dp[i+1][j+a[i]] |= dp[i+1][j];
+dp[i+1][j] |= dp[i+1][j-a[i]];
 ```
-
-　
 
 このように変更することで、`a[i]` を何度でも活用できる状態になります。計算量は変わらず O(NW) となります。
 
@@ -281,6 +273,8 @@ dp[i+1][j+a[i]] |= dp[i+1][j];
 #include <iostream>
 #include <vector>
 using namespace std;
+template<class T> void chmax(T& a, T b) { if (a < b) a = b; }
+template<class T> void chmin(T& a, T b) { if (a > b) a = b; }
 
 int main() {
     // 入力
@@ -289,13 +283,17 @@ int main() {
     vector<int> a(N);
     for (int i = 0; i < N; ++i) cin >> a[i];
 
-    // DP
+    // DP テーブル
     vector<vector<bool>> dp(N+1, vector<bool>(W+1, false));
+
+    // 初期条件
     dp[0][0] = true;
+
+    // ループ
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j <= W; ++j) {
             if (dp[i][j]) dp[i+1][j] = true;
-            if (dp[i+1][j] && j+a[i] <= W) dp[i+1][j+a[i]] = true;
+            if (j >= a[i] && dp[i+1][j-a[i]]) dp[i+1][j] = true;
         }
     }
 
@@ -329,11 +327,11 @@ int main() {
 
 
 
-- `dp[i+1][j] < m[i]`  である場合
+- `dp[i+1][j-a[i]] < m[i]`  である場合
 
 さらに追加で `a[i]` を用いることができるので、
 
-`chmin(dp[i+1][j+a[i]], dp[i+1][j] + 1)`
+`chmin(dp[i+1][j], dp[i+1][j-a[i]] + 1)`
 
 
 
@@ -345,10 +343,12 @@ int main() {
 #include <iostream>
 #include <vector>
 using namespace std;
-template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
-template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
+template<class T> void chmax(T& a, T b) { if (a < b) a = b; }
+template<class T> void chmin(T& a, T b) { if (a > b) a = b; }
 
+// 無限大を表す値
 const int INF = 1<<29;
+
 int main() {
     // 入力
     int N, W;
@@ -358,12 +358,19 @@ int main() {
 
     // DP
     vector<vector<int>> dp(N+1, vector<int>(W+1, INF));
+
+    // 初期条件
     dp[0][0] = 0;
+
+    // ループ
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j <= W; ++j) {
+            // i 個ですでに j が作れる場合
             if (dp[i][j] < INF) chmin(dp[i+1][j], 0);
-            if (j+a[i] <= W && dp[i+1][j] < m[i]) {
-                chmin(dp[i+1][j+a[i]], dp[i+1][j]+1);
+
+            // i+1 個で m[i] 個未満で j-a[i] が作れるなら j も作れる
+            if (j >= a[i] && dp[i+1][j-a[i]] < m[i]) {
+                chmin(dp[i+1][j], dp[i+1][j-a[i]]+1);
             }
         }
     }
@@ -378,9 +385,87 @@ int main() {
 
 # 5.7 (最長共通部分列問題)
 
-本問題は、5.5 節で解説した「編集距離を求める問題」の類題です。詳細については、以下の記事の「問題 8: 最長共通部分列 (LCS) 問題」の節に詳しく書きました。
+本問題は、5.5 節で解説した「編集距離を求める問題」の類題です。編集距離を求める動的計画法と同様に、次の配列 `dp` を定義しましょう。なお、最長共通部分列のことを LCS (Longest Common Subsequence) と呼びます。
 
-[典型的な DP (動的計画法) のパターンを整理 Part 1 ～ ナップサック DP 編 ～](https://qiita.com/drken/items/a5e6fe22863b7992efdb)
+-----
+
+`dp[i][j]` ← 文字列 S の最初の i 文字と、文字列 T の最初の j 文字分との間の LCS の長さ
+
+-----
+
+そして、「S の 最初の i 文字分」と「T の最初の j 文字分」のそれぞれの最後の 1 文字をどのように対応付けるかによって場合分けして考えます。
+
+　
+
+#### S の i 文字目と T の j 文字目を対応させるとき
+
+- `S[i-1] == T[j-1]` ならば、`chmax(dp[i][j], dp[i-1][j-1]+1)`
+- それ以外ならば、`chmax(dp[i][j], dp[i-1][j-1])`
+
+　
+
+#### S の i 文字目を追加
+
+「S の最初の i - 1 文字分」と「T の最初の j 文字分」との対応に対して、S の i 文字目を追加します。このとき、特に LCS の長さは変わらないので次のようになります。
+
+`chmax(dp[i][j], dp[i-1][j])`
+
+　
+
+#### T の j 文字目を追加
+
+「S の最初の i 文字分」と「T の最初の j - 1 文字分」との対応に対して、T の j 文字目を追加します。このとき、特に LCS の長さは変わらないので次のようになります。
+
+`chmax(dp[i][j], dp[i][j-1])`
+
+　
+
+これらをまとめると、次のように実装できます。計算量は O(NM) となります (N：S の長さ、M：T の長さ)。
+
+　
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+template<class T> void chmax(T& a, T b) { if (a < b) a = b; }
+template<class T> void chmin(T& a, T b) { if (a > b) a = b; }
+
+int main() {
+    // 入力
+    string S, T;
+    cin >> S >> T;
+    int N = S.size(), M = T.size();
+
+    // DP テーブル
+    vector<vector<int>> dp(N+1, vector<int>(M+1, 0));
+
+    // ループ
+    for (int i = 0; i <= N; ++i) {
+        for (int j = 0; j <= M; ++j) {
+            // S の i 文字目と、T の j 文字目が等しいとき
+            if (i > 0 && j > 0) {
+                if (S[i-1] == T[j-1]) chmax(dp[i][j], dp[i-1][j-1] + 1);
+                else chmax(dp[i][j], dp[i-1][j-1]);
+            }
+          
+            // S に 1 文字追加
+            if (i > 0) {
+                chmax(dp[i][j], dp[i-1][j]);
+            }
+          
+            // T に 1 文字追加
+            if (j > 0) {
+                chmax(dp[i][j], dp[i][j-1]);
+            }
+        }
+    }
+
+    // LCS
+    cout << dp[N][M] << endl;
+}
+```
 
 　　
 
