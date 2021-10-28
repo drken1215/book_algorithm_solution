@@ -19,18 +19,19 @@ int main() {
     while (right - left > 1) {
         long long mid = (left + right) / 2;
         
-        // 判定
+        // 判定する
         bool ok = true;
-        vector<long long> t(N, 0); // 各風船を割るまでの制限時間
+        vector<long long> t(N, 0);  // 各風船を割るまでの制限時間
         for (int i = 0; i < N; ++i) {
-            // そもそも mid が初期高度より低かったらfalse
+            // そもそも mid が初期高度より低かったら false
             if (mid < H[i]) ok = false; 
             else t[i] = (mid - H[i]) / S[i];
         }
-        // 時間制限がさし迫っている順にソート
+        // 時間制限がさし迫っている順にソート する
         sort(t.begin(), t.end()); 
         for (int i = 0; i < N; ++i) {
-            if (t[i] < i) ok = false; // 時間切れ発生
+            // 時間切れ発生の場合は false
+            if (t[i] < i) ok = false; 
         }
 
         if (ok) right = mid;
