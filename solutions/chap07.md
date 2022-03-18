@@ -39,9 +39,6 @@ i = 0 とします
 #include <algorithm>
 using namespace std;
 
-// (所要時間, 締め切り) のペア
-using pll = pair<long long, long long>;
-
 int main() {
     // 入力
     int N;
