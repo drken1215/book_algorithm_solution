@@ -225,6 +225,9 @@ int main() {
     // ループ
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j <= W; ++j) {
+            // 初期条件
+            if (i == 0) dp[i][a[j]] = 1;
+
             // a[i] を選ばない場合
             chmin(dp[i+1][j], dp[i][j]);
 
